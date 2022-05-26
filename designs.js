@@ -1,55 +1,42 @@
 // Select color input
+var gridColor = document.getElementById('colorPicker');
 // Select size input
-var canvas = document.getElementById("pixelCanvas");
-var color = document.getElementById("colorPicker");
-var sizePicker = document.getElementById("sizePicker");
-var height = document.getElementById("inputHeight");
-var width = document.getElementById("inputWidth");
-var toggle = document.getElementById("gridToggle");
-var save = document.getElementById("saveArt");
+var gridHeight = document.getElementById('inputHeight');
+var gridWidth = document.getElementById('inputWidth');
+const submitButton = document.getElementById("submitBtn");
+const grid = document.getElementById('pixelCanvas');
+
 // When size is submitted by the user, call makeGrid()
+	submitButton.addEventListener('click' , function(x){
+		//to check the listener 
+		console.log("the user was submit the grid dimention");
+		//to remove the old grid 
+		grid.innerHTML = " ";
+		//to keep the changes 
+		x.preventDefault();
+		//call the function
+		makeGrid();
+		
+	});
 
-function makeGrid(heght, width) {
-    for (let y = 0; y < height; y++) {
-        let row = canvas.insertRow(y);
-        for (let x = 0; x < width; x++) {
-            let cell = row.insertCell(x);
-            cell.addEventListener("mousedown", function(evt) {
-                cell.style.backgroundColor = color.value;
-            cell.addEventListener("contextmenu", function(evt) {
-                evt.preventDefault();
-                cell.style.backgroundColor = "white";
-            } )
-            } )
-        }
-    }
+	grid.addEventListener('click' , function(x) {
+		// the if statement to prevent coloring all the grid
+		if(x.target.nodeName === 'TD'){
+		x.target.style.backgroundColor = gridColor.value; 
+		}
+	});
+
+function makeGrid(x) {
+	for(var i=0 ; i<gridHeight.value ; i++){
+		const row = grid.insertRow (0);
+		for( var j=0 ; j<gridWidth.value ; j++){
+			row.insertCell (0);
+		}
+	}
 }
+
 // Your code goes here!
-//function to toggle on/off grid within the design canvas
-toggle.addEventListener("click", function() {
-    var elementsTd = document.getElementsByTagName("td");
-    var elementsTr = document.getElementsByTagName("tr");
-    for (var i=0; i<elementsTd.length; ++i) {
-        elementsTd[i].classList.toggle("off");
-    }
-    for (var j=0; j<elementsTr.length; ++j) {
-        elementsTr[j].classList.toggle("off");
-    }
-});
+/* var form = document.getElementById('pixelCanvas');
+form.style.backgroundColor = gridColor ; */
 
-//function that uses the size picker submit to call makeGrid() funtion
-sizePicker.addEventListener("submit", function(evt) {
-    evt.preventDefault();
-    while (canvas.hasChildNodes()) {
-        canvas.removeChild(canvas.lastChild);
-    }
-    makeGrid(height.value, width.value);
-});
 
-//function that saves the art as canvas
-save.addEventListener("click", function(evt) {
-    evt.preventDefault();
-    html2canvas(canvas).then(canvas => {
-        document.body.appendChild(canvas)
-    });
-});
